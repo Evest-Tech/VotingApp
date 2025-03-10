@@ -66,7 +66,7 @@ onAuthStateChanged(auth, (user) => {
 
       const selectedVote = document.querySelector('input[name="vote"]:checked');
       if (!selectedVote) {
-        // alert("Please select a candidate before submitting.");
+        alert("Please select a candidate before submitting.");
         return;
       }
      
@@ -77,7 +77,8 @@ onAuthStateChanged(auth, (user) => {
       const result = await castVote(currentUserId, currentSessionId, voterName, aadhaarNumber, selectedVote.value);
       if (result.success) {
         alert("Your vote has been recorded successfully!");
-        window.location.href = "/thanking.html"; // Redirect after successful vote      } else {
+        window.location.href = "/thanking.html"; // Redirect after successful vote      
+        } else {
         alert(result.message);
       }
     });
@@ -98,22 +99,23 @@ onAuthStateChanged(auth, (user) => {
   window.onload = function () {
     document.getElementById("sign-out")?.addEventListener("click", SignOutHandler);
   };
-  document.getElementById("submit-vote").addEventListener("click", async function () {
-    try {
-         // Assume this checks voting status
+//   document.getElementById("submit-vote").addEventListener("click", async function () {
+//     try {
+//          // Assume this checks voting status
 
-        if (hasUserVoted()) {
-            console.error("User has already voted in this session.");
-            let voteModal = new bootstrap.Modal(document.getElementById("voteWarningModal"));
-            voteModal.show();
-            return;
-        }
+//         if (hasUserVoted()) {
+//             console.error("User has already voted in this session.");
+//             // let voteModal = new bootstrap.Modal(document.getElementById("voteWarningModal"));
+//             // voteModal.show();
+//             showModal();
+//             return;
+//         }
 
-        // Continue with vote submission logic...
-    } catch (error) {
-        console.error("Error checking vote status:", error);
-    }
-});
+//         // Continue with vote submission logic...
+//     } catch (error) {
+//         console.error("Error checking vote status:", error);
+//     }
+// });
 // document.addEventListener("DOMContentLoaded", () => {
 //   // Get the modal trigger button
 //   const submitVoteButton = document.getElementById("submit-vote");
