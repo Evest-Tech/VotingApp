@@ -77,7 +77,7 @@ onAuthStateChanged(auth, (user) => {
       const result = await castVote(currentUserId, currentSessionId, voterName, aadhaarNumber, selectedVote.value);
       if (result.success) {
         alert("Your vote has been recorded successfully!");
-        window.location.href = "/thanking.html"; // Redirect after successful vote      
+        window.location.href = "VotingApp/thanking.html"; // Redirect after successful vote      
         } else {
         alert(result.message);
       }
