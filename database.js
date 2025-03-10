@@ -25,32 +25,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+
+
 // ✅ Function to Store Vote in Firestore
-export async function castVote(userId, sessionId, voterName, aadhaarNumber, voteChoice) {
-  const voteRef = doc(db, `users/${userId}/votes`, sessionId);
-  const voteSnap = await getDoc(voteRef);
 
-  if (voteSnap.exists()) {
-    console.error("User has already voted in this session.");
-    return { success: false, message: "User has already voted in this session." };
-  }
-
-  try {
-    await setDoc(voteRef, {
-      vote: voteChoice,
-      time: serverTimestamp(),
-      voterName: voterName,
-      aadhaarNumber: aadhaarNumber
-    });
-    console.log("Vote recorded successfully.");
-
-    return { success: true, message: "Vote recorded successfully." };
-
-  } catch (error) {
-    console.error("Error storing vote: ", error);
-    return { success: false, message: "Error storing vote." };
-  }
-}
 
 // ✅ Function to Get User's Votes
 export async function getUserVotes(userId) {

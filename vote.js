@@ -2,7 +2,19 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
 import {  getAuth,  signOut,
   onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
-import { castVote, hasUserVoted } from "./database.js";
+import {  hasUserVoted } from "./database.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  serverTimestamp,
+  updateDoc,
+  deleteDoc,
+} from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
 
 
@@ -18,6 +30,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 let currentUserId = null;
 
@@ -47,13 +60,13 @@ onAuthStateChanged(auth, (user) => {
     console.log("Current Session ID:", currentSessionId);
     voteButton.addEventListener("click", async () => {
       if (!currentUserId || !currentSessionId) {
-        alert("Something went wrong. Please verify your session again.");
+        // alert("Something went wrong. Please verify your session again.");
         return;
       }
 
       const selectedVote = document.querySelector('input[name="vote"]:checked');
       if (!selectedVote) {
-        alert("Please select a candidate before submitting.");
+        // alert("Please select a candidate before submitting.");
         return;
       }
      
@@ -66,8 +79,6 @@ onAuthStateChanged(auth, (user) => {
         alert("Your vote has been recorded successfully!");
         window.location.href = "/thanking.html"; // Redirect after successful vote      } else {
         alert(result.message);
-      }else{
-        showModal();
       }
     });
   }
@@ -89,9 +100,9 @@ onAuthStateChanged(auth, (user) => {
   };
   document.getElementById("submit-vote").addEventListener("click", async function () {
     try {
-        const voteSnap = await checkIfUserHasVoted(); // Assume this checks voting status
+         // Assume this checks voting status
 
-        if (voteSnap.exists()) {
+        if (hasUserVoted()) {
             console.error("User has already voted in this session.");
             let voteModal = new bootstrap.Modal(document.getElementById("voteWarningModal"));
             voteModal.show();
@@ -103,28 +114,57 @@ onAuthStateChanged(auth, (user) => {
         console.error("Error checking vote status:", error);
     }
 });
-document.addEventListener("DOMContentLoaded", () => {
-  // Get the modal trigger button
-  const submitVoteButton = document.getElementById("submit-vote");
-  const okButton = document.getElementById("ok-button");
+// document.addEventListener("DOMContentLoaded", () => {
+//   // Get the modal trigger button
+//   const submitVoteButton = document.getElementById("submit-vote");
+//   const okButton = document.getElementById("ok-button");
 
-  if (submitVoteButton) {
-      submitVoteButton.addEventListener("click", function () {
-          showModal();
-      });
-  }
+//   if (submitVoteButton) {
+//       submitVoteButton.addEventListener("click", function () {
+//           showModal();
+//       });
+//   }
 
-  function showModal() {
-      let modal = new bootstrap.Modal(document.getElementById("voteModal"));
-      modal.show();
-  }
+ function showModal() {
+   let modal = new bootstrap.Modal(document.getElementById("voteModal"));
+   modal.show();
+   let okButton = document.getElementById("ok-button");
+ 
+ if (okButton) {
+   okButton.addEventListener("click", function () {
+     SignOutHandler();          // Redirect to signin.html
+   });
+ }
+ }
+ 
 
-  if (okButton) {
-      okButton.addEventListener("click", function () {
-        SignOutHandler();          // Redirect to signin.html
-      });
-  }
-});
+ export async function castVote(userId, sessionId, voterName, aadhaarNumber, voteChoice) {
+   const voteRef = doc(db, `users/${userId}/votes`, sessionId);
+   const voteSnap = await getDoc(voteRef);
+ 
+   if (voteSnap.exists()) {
+     showModal();
+     // console.error("User has already voted in this session.");
+     return { success: false, message: "User has already voted in this session." };
+   }
+ 
+   try {
+     await setDoc(voteRef, {
+       vote: voteChoice,
+       time: serverTimestamp(),
+       voterName: voterName,
+       aadhaarNumber: aadhaarNumber
+     });
+     console.log("Vote recorded successfully.");
+ 
+     return { success: true, message: "Vote recorded successfully." };
+ 
+   } catch (error) {
+     console.error("Error storing vote: ", error);
+     return { success: false, message: "Error storing vote." };
+   }
+ }
+// });
 
 
   
