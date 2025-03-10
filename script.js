@@ -29,16 +29,16 @@ onAuthStateChanged(auth, (user) => {
     console.log("User signed in:", user);
     currentUserId = user.uid;
 
-    if (window.location.pathname === "/confirm.html") {
+    if (window.location.pathname === "VotingApp/vote.html") {
       return;
     }
     
-    if (window.location.pathname !== "/votemyi.html") {
+    if (window.location.pathname !== "VotingApp/index.html") {
       // window.location.href = "index.html"; // Uncomment if redirection is needed
     }
   } else {
     console.log("No user is signed in.");
-    if (window.location.pathname === "/votemyi.html") {
+    if (window.location.pathname === "VotingApp/index.html") {
       window.location.href = "signin.html"; // Redirect to login page if logged out
     }
   }

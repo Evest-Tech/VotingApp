@@ -25,14 +25,14 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User signed in:", user);
     currentUserId = user.uid;  // ✅ Get Google UUID
-    if (window.location.pathname === "/vote.html") {
+    if (window.location.pathname === "VotingApp/vote.html") {
     }
-    else if (window.location.pathname !== "/index.html") {
+    else if (window.location.pathname !== "VotingApp/index.html") {
       window.location.href = "index.html"; // Redirect only if not already there
     }
   } else {
     console.log("No user is signed in.");
-    if (window.location.pathname === "/index.html") {
+    if (window.location.pathname === "VotingApp/index.html") {
       window.location.href = "signin.html"; // Redirect to login page if logged out
     }
   }
