@@ -33,13 +33,19 @@ const provider = new GoogleAuthProvider();
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User signed in:", user);
-    if (window.location.pathname !== "VotingApp/index.html") {  
-      window.location.href = "index.html"; // Redirect only if not already there
+    // if (window.location.pathname !== "VotingApp/index.html") {  
+    //   window.location.href = "index.html"; // Redirect only if not already there
+    // }
+    if(window.location.href.includes("signin.html")) {
+      window.location.href = "index.html";
     }
   } else {
     console.log("No user is signed in.");
-    if (window.location.pathname === "VotingApp/index.html") {
-      window.location.href = "signin.html"; // Redirect back to login page if logged out
+    // if (window.location.pathname === "VotingApp/index.html") {
+    //   window.location.href = "signin.html"; // Redirect back to login page if logged out
+    // }
+    if(window.location.href.includes("index.html")) {
+      window.location.href = "signin.html";
     }
   }
 });
